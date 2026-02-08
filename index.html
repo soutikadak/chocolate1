@@ -26,15 +26,25 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            transition: background 1s ease;
         }
 
         /* Box Container */
-        .gift-container {
+        #main-stage {
             position: relative;
             width: 650px;
+            height: 550px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .gift-container {
+            position: relative;
+            width: 100%;
             height: 500px;
             perspective: 1000px;
-            z-index: 10;
         }
 
         /* The Lid */
@@ -54,9 +64,8 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
 
-        /* Ribbon on the lid */
-        .ribbon-v { position: absolute; width: 60px; height: 100%; background: var(--ribbon); left: 50%; transform: translateX(-50%); box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
-        .ribbon-h { position: absolute; height: 60px; width: 100%; background: var(--ribbon); top: 50%; transform: translateY(-50%); box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
+        .ribbon-v { position: absolute; width: 60px; height: 100%; background: var(--ribbon); left: 50%; transform: translateX(-50%); }
+        .ribbon-h { position: absolute; height: 60px; width: 100%; background: var(--ribbon); top: 50%; transform: translateY(-50%); }
 
         .lid-text {
             background: white;
@@ -66,18 +75,16 @@
             font-family: 'Dancing Script', cursive;
             font-size: 2.5rem;
             z-index: 101;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             border: 2px solid var(--gold);
         }
 
-        /* Lid Opening Animation */
         .gift-container.open .box-lid {
-            transform: translateY(-120%) rotateX(20deg);
+            transform: translateY(-130%) rotateX(30deg);
             opacity: 0;
             pointer-events: none;
         }
 
-        /* The Chocolate Tray (Internal Box) */
+        /* The Tray */
         .chocolate-tray {
             width: 100%;
             height: 100%;
@@ -85,45 +92,26 @@
             border: 15px solid #3e2723;
             padding: 30px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 Columns */
-            grid-template-rows: repeat(3, 1fr);    /* 3 Rows */
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
             gap: 20px;
             box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
-            transform: scale(0.9);
-            transition: transform 1s ease 0.5s;
-        }
-
-        .gift-container.open .chocolate-tray {
-            transform: scale(1);
         }
 
         /* Chocolate Item */
         .choc-wrapper {
             position: relative;
-            width: 100%;
-            height: 100%;
             cursor: pointer;
             perspective: 600px;
         }
 
         .choc-body {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background: radial-gradient(circle at 30% 30%, var(--choc-milk), var(--choc-dark));
             border-radius: 10px;
             box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-            transition: all 0.5s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Decorative drizzle on top */
-        .choc-body::before {
-            content: "~~~";
-            color: rgba(255,255,255,0.2);
-            font-size: 1.5rem;
-            letter-spacing: -2px;
+            transition: all 0.6s ease;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .message-card {
@@ -132,89 +120,180 @@
             background: #fff;
             color: #4e342e;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 10px;
-            font-size: 0.75rem;
-            font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 10px; font-size: 0.75rem; font-weight: bold;
             transform: rotateY(180deg);
             backface-visibility: hidden;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
-        .choc-wrapper.revealed .choc-body {
-            transform: rotateY(180deg);
+        .choc-wrapper.revealed .choc-body { transform: rotateY(180deg); opacity: 0; }
+        .choc-wrapper.revealed .message-card { transform: rotateY(0deg); }
+
+        /* The Transition Button */
+        #celebrate-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            background: var(--gold);
+            color: var(--choc-dark);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
             opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
-        .choc-wrapper.revealed .message-card {
-            transform: rotateY(0deg);
+        #celebrate-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* Background Music/UI elements */
-        .hint {
+        #celebrate-btn:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+
+        /* Final Greeting Screen */
+        #greeting-screen {
             position: fixed;
-            bottom: 20px;
-            color: var(--gold);
-            font-style: italic;
-            opacity: 0.7;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #b71c1c 0%, #1a0f0a 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.5s ease;
         }
 
-        /* Shapes */
-        .choc-wrapper:nth-child(3n) .choc-body { border-radius: 50%; }
-        .choc-wrapper:nth-child(4n) .choc-body { border-radius: 20px 5px 20px 5px; }
+        .greeting-content h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 6rem;
+            color: var(--gold);
+            margin: 0;
+            text-shadow: 0 0 30px rgba(212,175,55,0.6);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .greeting-content p {
+            font-size: 1.8rem;
+            color: white;
+            margin-top: 20px;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Floating Hearts */
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 2rem;
+            animation: float-up 4s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
 
         @media (max-width: 700px) {
-            .gift-container { width: 95vw; height: 60vh; }
+            #main-stage { width: 95vw; }
             .chocolate-tray { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); padding: 10px; }
-            .lid-text { font-size: 1.5rem; }
+            .greeting-content h2 { font-size: 3.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="gift-container" id="box">
-        <div class="box-lid" onclick="openBox()">
-            <div class="ribbon-v"></div>
-            <div class="ribbon-h"></div>
-            <div class="lid-text">Click to Unbox My Love</div>
+    <div id="main-stage">
+        <div class="gift-container" id="box">
+            <div class="box-lid" onclick="openBox()">
+                <div class="ribbon-v"></div>
+                <div class="ribbon-h"></div>
+                <div class="lid-text">For the Sweetest One...</div>
+            </div>
+
+            <div class="chocolate-tray">
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Life is sweeter with you.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">You're my favorite treat!</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Pure love, no filters.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">You melt my heart.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">My sweet addiction.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Hugs in every bite.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Forever starts today.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">You're 1 in a billion.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">I'm cocoa-nuts for you!</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">A kiss for my queen.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">My heart beats for you.</div></div>
+                <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">You + Me = Magic.</div></div>
+            </div>
         </div>
 
-        <div class="chocolate-tray">
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">You make my life sweeter!</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">My favorite place is inside your hug.</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">To the girl who stole my heart.</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Better than dark chocolate!</div></div>
-            
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">You're my 1 in a million.</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Happy Chocolate Day, Gorgeous.</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">I'm addicted to your smile.</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Love you to the moon & back.</div></div>
-            
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">You + Me = Forever.</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">My sweetest obsession.</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Will you be my Valentine?</div></div>
-            <div class="choc-wrapper" onclick="reveal(this)"><div class="choc-body"></div><div class="message-card">Keep this kiss for later. 💋</div></div>
-        </div>
+        <button id="celebrate-btn" onclick="showGreeting()">Click for a Final Surprise!</button>
     </div>
 
-    <div class="hint">Click the box to open, then click each chocolate.</div>
+    <div id="greeting-screen">
+        <div class="greeting-content">
+            <h2>Happy Chocolate Day!</h2>
+            <p>To the girl who is sweeter than any chocolate on this planet. May our love stay as rich and delicious as this box forever!</p>
+            <p style="font-family: 'Dancing Script'; font-size: 3rem; color: var(--gold);">❤️ I Love You ❤️</p>
+        </div>
+    </div>
 
     <script>
         function openBox() {
             document.getElementById('box').classList.add('open');
+            // Show the final button after a short delay
+            setTimeout(() => {
+                document.getElementById('celebrate-btn').classList.add('visible');
+            }, 1000);
         }
 
         function reveal(el) {
             el.classList.add('revealed');
-            // Little bounce effect when revealed
-            el.style.transform = "scale(1.1)";
+        }
+
+        function showGreeting() {
+            const stage = document.getElementById('main-stage');
+            const greeting = document.getElementById('greeting-screen');
+            
+            // Phase 1: Fade out main stage
+            stage.style.opacity = '0';
+            stage.style.transform = 'scale(0.9)';
+            
             setTimeout(() => {
-                el.style.transform = "scale(1)";
-            }, 200);
+                stage.style.display = 'none';
+                // Phase 2: Show greeting screen
+                greeting.style.display = 'flex';
+                setTimeout(() => {
+                    greeting.style.opacity = '1';
+                    startHearts();
+                }, 100);
+            }, 1000);
+        }
+
+        function startHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.getElementById('greeting-screen').appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 4000);
+            }, 300);
         }
     </script>
 </body>
